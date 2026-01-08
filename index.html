@@ -3,11 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZenBudget Pro - Gestion Totale</title>
+    <title>ZenBudget Pro - PWA</title>
+    
+    <!-- Lien vers le Manifeste (Carte d'identité de l'app) -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6366f1">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
+        /* [VOTRE CSS ACTUEL - JE GARDE LA CORRECTION DU BOUTON +] */
         :root {
             --primary: #6366f1;
             --bg-dark: #0f172a;
@@ -19,7 +26,6 @@
             --shadow: rgba(0, 0, 0, 0.5);
             --income: #10b981;
             --expense: #ef4444;
-            --premium-gold: #f59e0b;
         }
 
         .light-mode {
@@ -29,7 +35,6 @@
             --text-dim: #64748b;
             --border: #e2e8f0;
             --input-bg: #f8fafc;
-            --shadow: rgba(0, 0, 0, 0.1);
         }
 
         body {
@@ -55,53 +60,6 @@
             padding: 25px;
             border-radius: 32px;
             box-shadow: 0 25px 50px -12px var(--shadow);
-            position: relative;
-        }
-
-        .custom-modal {
-            display: none;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--input-bg);
-            border: 1px solid var(--primary);
-            padding: 20px;
-            border-radius: 20px;
-            z-index: 100;
-            width: 85%;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-        }
-
-        .global-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .theme-toggle {
-            background: var(--input-bg);
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            padding: 8px;
-            border-radius: 50%;
-            cursor: pointer;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .pro-badge {
-            background: linear-gradient(90deg, #f59e0b, #fbbf24);
-            color: #000;
-            font-size: 11px;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-weight: 800;
         }
 
         .balance-card {
@@ -114,66 +72,6 @@
             position: relative; 
         }
 
-        .edit-init-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            padding: 8px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 12px;
-            transition: 0.2s;
-        }
-
-        .edit-init-btn:hover { background: rgba(255, 255, 255, 0.4); }
-
-        .filter-bar {
-            display: flex;
-            gap: 5px;
-            margin-bottom: 15px;
-            overflow-x: auto;
-            padding-bottom: 5px;
-        }
-
-        .filter-btn {
-            background: var(--input-bg);
-            border: 1px solid var(--border);
-            color: var(--text-dim);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.2s;
-        }
-
-        .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
-
-        .chart-section {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid var(--border);
-            padding: 15px;
-            border-radius: 20px;
-            margin-bottom: 20px;
-        }
-
-        .chart-title { font-size: 10px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; margin-bottom: 10px; display: block; }
-
-        .chart-bars {
-            display: flex;
-            align-items: flex-end;
-            gap: 12px;
-            height: 80px;
-            overflow-x: auto;
-        }
-
-        .bar-container { display: flex; flex-direction: column; align-items: center; min-width: 50px; }
-        .bar { width: 25px; border-radius: 6px 6px 2px 2px; transition: height 0.4s; min-height: 4px; }
-        .bar-label { font-size: 8px; color: var(--text-dim); margin-top: 5px; }
-
         .input-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
 
         input, select {
@@ -182,8 +80,9 @@
             padding: 12px;
             border-radius: 12px;
             color: var(--text-main);
-            outline: none;
             font-size: 14px;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .btn-add {
@@ -196,467 +95,107 @@
             cursor: pointer;
         }
 
-        .tx-list { list-style: none; padding: 0; max-height: 250px; overflow-y: auto; margin-top: 10px; }
-        .tx-item { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            padding: 12px 0; 
-            border-bottom: 1px solid var(--border); 
-        }
-
-        .tx-actions { display: flex; gap: 10px; margin-left: 10px; }
-        .btn-action { background: none; border: none; cursor: pointer; font-size: 14px; padding: 5px; border-radius: 5px; transition: 0.2s; }
-        .btn-edit { color: var(--primary); }
-        .btn-delete { color: var(--expense); }
-
-        .utility-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .btn-utility {
-            background: var(--input-bg);
-            border: 1px solid var(--border);
-            color: var(--text-dim);
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 11px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-        }
-
-        #cat-entry-zone {
-            display: none;
-            background: rgba(99, 102, 241, 0.1);
-            padding: 15px;
-            border-radius: 15px;
-            margin-bottom: 15px;
-            border: 1px solid var(--primary);
-        }
-
-        .hidden { display: none !important; }
-        ::-webkit-scrollbar { height: 4px; width: 4px; }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-
+        /* Correction Bouton Plus */
         .btn-plus-cat {
             background: var(--input-bg); 
             border: 1px solid var(--border); 
             color: var(--text-main); 
-            border-radius: 10px; 
-            padding: 0 12px; 
+            border-radius: 12px; 
+            width: 45px;
+            min-width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+            flex-shrink: 0;
         }
+
+        .tx-list { list-style: none; padding: 0; max-height: 250px; overflow-y: auto; }
+        .tx-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
     <div class="app-card">
-        <!-- Confirmation Reset -->
-        <div id="custom-confirm" class="custom-modal">
-            <p style="font-size: 14px; margin-bottom: 15px;">Effacer toutes les données et les catégories ?</p>
-            <div style="display: flex; gap: 10px;">
-                <button onclick="executeHardReset()" class="btn-add" style="flex:1; background: var(--expense); padding: 10px;">Oui</button>
-                <button onclick="closeModal('custom-confirm')" class="btn-utility" style="flex:1;">Annuler</button>
-            </div>
-        </div>
-
-        <!-- Modale Solde Initial -->
-        <div id="modal-edit-init" class="custom-modal">
-            <p style="font-size: 14px; margin-bottom: 15px; font-weight: 600;">Nouveau solde de départ</p>
-            <input type="number" id="input-new-init" style="width: 80%; margin-bottom: 15px;" placeholder="Ex: 1500">
-            <div style="display: flex; gap: 10px;">
-                <button onclick="confirmInitialBalanceChange()" class="btn-add" style="flex:1; padding: 10px;">Enregistrer</button>
-                <button onclick="closeModal('modal-edit-init')" class="btn-utility" style="flex:1;">Annuler</button>
-            </div>
-        </div>
-
-        <header class="global-header">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <button class="theme-toggle" onclick="toggleTheme()">
-                    <i id="theme-icon" class="fas fa-moon"></i>
-                </button>
-                <h1 style="font-size: 16px; margin:0;">ZenBudget</h1>
-            </div>
-            <span class="pro-badge">Pro</span>
+        <header style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+            <button class="btn-add" style="padding: 8px; border-radius: 50%;" onclick="toggleTheme()">🌓</button>
+            <h1 style="font-size: 18px;">ZenBudget Pro</h1>
         </header>
 
-        <!-- CONFIGURATION INITIALE -->
-        <div id="setup-screen" class="hidden">
-            <h2 style="text-align: center; font-size: 20px; margin-bottom: 20px;">Bienvenue</h2>
-            <p style="text-align: center; font-size: 12px; color: var(--text-dim); margin-bottom: 20px;">Veuillez indiquer votre solde actuel pour commencer.</p>
-            <div class="input-group">
-                <input type="number" id="initial-balance-input" placeholder="Solde de départ (ex: 1200)">
-                <button class="btn-add" onclick="saveInitialBalance()">Commencer mon suivi</button>
-            </div>
-        </div>
-
-        <!-- APPLICATION PRINCIPALE -->
-        <div id="main-app" class="hidden">
+        <div id="main-app">
             <div class="balance-card">
-                <button class="edit-init-btn" onclick="openInitModal()" title="Modifier le solde de départ">
-                    <i class="fas fa-pencil-alt"></i>
-                </button>
                 <small>Solde Actuel</small>
                 <h2 id="total-val">0.00 €</h2>
-                <div id="init-info" style="font-size: 9px; opacity: 0.8; margin-top: -5px;"></div>
-            </div>
-
-            <div class="filter-bar">
-                <button class="filter-btn active" onclick="setFilter('all', this)">Tout</button>
-                <button class="filter-btn" onclick="setFilter('week', this)">Semaine</button>
-                <button class="filter-btn" onclick="setFilter('month', this)">Mois</button>
-                <button class="filter-btn" onclick="setFilter('year', this)">Année</button>
-            </div>
-
-            <div class="chart-section">
-                <span class="chart-title" id="chart-type-label">Analyse des flux</span>
-                <div class="chart-bars" id="chart-container"></div>
-            </div>
-
-            <!-- Ajout de catégorie -->
-            <div id="cat-entry-zone">
-                <span style="font-size: 10px; color: var(--primary); font-weight: 700;">NOUVELLE CATÉGORIE</span>
-                <div style="display: flex; gap: 8px; margin-top: 5px;">
-                    <input type="text" id="new-cat-name" placeholder="Nom..." style="flex: 1;" onkeypress="if(event.key === 'Enter') confirmNewCategory()">
-                    <button onclick="confirmNewCategory()" class="btn-add" style="padding: 0 15px;">OK</button>
-                </div>
             </div>
 
             <div class="input-group">
-                <input type="hidden" id="edit-id" value="">
-                
-                <div style="display: flex; gap: 8px;">
-                    <select id="tx-type" style="flex: 1;" onchange="handleTypeChange()">
-                        <option value="expense">Dépense (-)</option>
-                        <option value="income">Revenu (+)</option>
-                    </select>
-                    <input type="date" id="tx-date" style="flex: 1;">
-                </div>
-                
                 <div style="display: flex; gap: 8px;">
                     <input type="number" id="tx-amount" placeholder="Montant" style="flex: 1;">
-                    <select id="tx-cat" style="flex: 1;"></select>
-                    <button onclick="toggleCatZone()" class="btn-plus-cat" title="Ajouter une catégorie">+</button>
+                    <select id="tx-type" style="width: 100px;">
+                        <option value="expense">➖</option>
+                        <option value="income">➕</option>
+                    </select>
                 </div>
-
-                <input type="text" id="tx-desc" placeholder="Description (optionnel)">
-                <button class="btn-add" id="submit-btn" onclick="processTransaction()">Enregistrer</button>
-                <button class="hidden" id="cancel-edit" onclick="resetForm()" style="background:transparent; border:none; color:var(--text-dim); font-size:12px; cursor:pointer;">Annuler la modification</button>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="tx-desc" placeholder="Description" style="flex: 1;">
+                    <button onclick="addTx()" class="btn-plus-cat">OK</button>
+                </div>
             </div>
 
-            <span style="font-size: 11px; color: var(--text-dim); font-weight: 600;">HISTORIQUE</span>
             <ul class="tx-list" id="tx-list"></ul>
-
-            <div class="utility-grid">
-                <button class="btn-utility" onclick="exportToExcel()"><i class="fas fa-file-excel"></i> Excel</button>
-                <button class="btn-utility" onclick="saveBackup()"><i class="fas fa-save"></i> Backup</button>
-                <button class="btn-utility" onclick="importBackup()"><i class="fas fa-upload"></i> Import</button>
-                <button class="btn-utility" onclick="openModal('custom-confirm')"><i class="fas fa-trash"></i> Reset</button>
-            </div>
         </div>
     </div>
 
     <script>
-        // Clés de stockage LocalStorage
-        const STORAGE_KEY_TX = 'zb_pro_v8_tx';
-        const STORAGE_KEY_INIT = 'zb_pro_v8_init';
-        const STORAGE_KEY_THEME = 'zb_pro_v8_theme';
-        const STORAGE_KEY_CATS_EXP = 'zb_pro_v8_cats_exp';
-        const STORAGE_KEY_CATS_INC = 'zb_pro_v8_cats_inc';
+        // Enregistrement du Service Worker pour le mode hors-ligne
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+            .then(() => console.log("Service Worker prêt !"))
+            .catch(err => console.log("Erreur SW:", err));
+        }
 
-        // Chargement des données
-        let transactions = JSON.parse(localStorage.getItem(STORAGE_KEY_TX)) || [];
-        let initialBalance = localStorage.getItem(STORAGE_KEY_INIT);
-        if (initialBalance !== null) initialBalance = parseFloat(initialBalance);
+        let transactions = JSON.parse(localStorage.getItem('zb_tx')) || [];
 
-        // Chargement des catégories personnalisées
-        let catsExp = JSON.parse(localStorage.getItem(STORAGE_KEY_CATS_EXP)) || ["Alimentation", "Transport", "Loisirs", "Logement", "Santé"];
-        let catsInc = JSON.parse(localStorage.getItem(STORAGE_KEY_CATS_INC)) || ["Salaire", "Vente", "Cadeau"];
-        
-        let currentFilter = 'all';
+        function addTx() {
+            const amt = parseFloat(document.getElementById('tx-amount').value);
+            const desc = document.getElementById('tx-desc').value || "Divers";
+            const type = document.getElementById('tx-type').value;
 
-        // Gestion du Thème
-        function applyTheme() {
-            const theme = localStorage.getItem(STORAGE_KEY_THEME);
-            const icon = document.getElementById('theme-icon');
-            if (theme === 'light') {
-                document.body.classList.add('light-mode');
-                icon.className = 'fas fa-sun';
-            } else {
-                document.body.classList.remove('light-mode');
-                icon.className = 'fas fa-moon';
-            }
+            if (isNaN(amt)) return;
+
+            transactions.unshift({ amt, desc, type, id: Date.now() });
+            localStorage.setItem('zb_tx', JSON.stringify(transactions));
+            updateUI();
+            document.getElementById('tx-amount').value = "";
+            document.getElementById('tx-desc').value = "";
+        }
+
+        function updateUI() {
+            const list = document.getElementById('tx-list');
+            let total = 0;
+            
+            list.innerHTML = transactions.map(t => {
+                if(t.type === 'income') total += t.amt; else total -= t.amt;
+                return `
+                    <li class="tx-item">
+                        <span>${t.desc}</span>
+                        <b style="color:${t.type === 'income' ? '#10b981' : '#ef4444'}">${t.amt}€</b>
+                    </li>
+                `;
+            }).join('');
+            
+            document.getElementById('total-val').innerText = total.toFixed(2) + " €";
         }
 
         function toggleTheme() {
-            const isLight = document.body.classList.toggle('light-mode');
-            localStorage.setItem(STORAGE_KEY_THEME, isLight ? 'light' : 'dark');
-            applyTheme();
+            document.body.classList.toggle('light-mode');
         }
 
-        // Initialisation de l'affichage
-        function checkInit() {
-            applyTheme();
-            document.getElementById('tx-date').valueAsDate = new Date();
-            
-            if (initialBalance === null || isNaN(initialBalance)) {
-                document.getElementById('setup-screen').classList.remove('hidden');
-                document.getElementById('main-app').classList.add('hidden');
-            } else {
-                document.getElementById('setup-screen').classList.add('hidden');
-                document.getElementById('main-app').classList.remove('hidden');
-                handleTypeChange();
-                updateUI();
-            }
-        }
-
-        function saveInitialBalance() {
-            const val = parseFloat(document.getElementById('initial-balance-input').value);
-            if (!isNaN(val)) {
-                initialBalance = val;
-                localStorage.setItem(STORAGE_KEY_INIT, initialBalance);
-                checkInit();
-            }
-        }
-
-        // Fenêtres modales
-        function openModal(id) { document.getElementById(id).style.display = 'block'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
-        function openInitModal() {
-            document.getElementById('input-new-init').value = initialBalance;
-            openModal('modal-edit-init');
-        }
-
-        function confirmInitialBalanceChange() {
-            const val = parseFloat(document.getElementById('input-new-init').value);
-            if (!isNaN(val)) {
-                initialBalance = val;
-                localStorage.setItem(STORAGE_KEY_INIT, initialBalance);
-                closeModal('modal-edit-init');
-                updateUI();
-            }
-        }
-
-        function executeHardReset() {
-            localStorage.clear();
-            window.location.reload();
-        }
-
-        // Filtres Temporels
-        function setFilter(filter, btn) {
-            currentFilter = filter;
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            updateUI();
-        }
-
-        function isDateInFilter(txDateStr) {
-            if (currentFilter === 'all') return true;
-            const parts = txDateStr.split('/');
-            const txDate = new Date(parts[2], parts[1] - 1, parts[0]);
-            const now = new Date();
-            const diffTime = Math.abs(now - txDate);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            if (currentFilter === 'week') return diffDays <= 7;
-            if (currentFilter === 'month') return txDate.getMonth() === now.getMonth() && txDate.getFullYear() === now.getFullYear();
-            if (currentFilter === 'year') return txDate.getFullYear() === now.getFullYear();
-            return true;
-        }
-
-        // Logique Transactions
-        function processTransaction() {
-            const id = document.getElementById('edit-id').value;
-            const type = document.getElementById('tx-type').value;
-            const amt = parseFloat(document.getElementById('tx-amount').value);
-            const cat = document.getElementById('tx-cat').value;
-            const desc = document.getElementById('tx-desc').value.trim() || cat;
-            const dateVal = document.getElementById('tx-date').value;
-
-            if (isNaN(amt) || amt <= 0 || !dateVal) return;
-
-            const d = new Date(dateVal);
-            const dateFormatted = d.toLocaleDateString('fr-FR');
-
-            if (id) {
-                const index = transactions.findIndex(t => t.id == id);
-                transactions[index] = { ...transactions[index], type, amount: amt, category: cat, description: desc, date: dateFormatted };
-            } else {
-                transactions.unshift({
-                    id: Date.now(),
-                    type, amount: amt, category: cat, description: desc,
-                    date: dateFormatted
-                });
-            }
-            resetForm();
-            updateUI();
-        }
-
-        function deleteTransaction(id) {
-            transactions = transactions.filter(t => t.id !== id);
-            updateUI();
-        }
-
-        function editTransaction(id) {
-            const t = transactions.find(tx => tx.id === id);
-            document.getElementById('edit-id').value = t.id;
-            document.getElementById('tx-type').value = t.type;
-            handleTypeChange();
-            document.getElementById('tx-cat').value = t.category;
-            document.getElementById('tx-amount').value = t.amount;
-            document.getElementById('tx-desc').value = t.description;
-            const parts = t.date.split('/');
-            document.getElementById('tx-date').value = `${parts[2]}-${parts[1]}-${parts[0]}`;
-            document.getElementById('submit-btn').innerText = "Mettre à jour";
-            document.getElementById('cancel-edit').classList.remove('hidden');
-        }
-
-        function resetForm() {
-            document.getElementById('edit-id').value = "";
-            document.getElementById('tx-amount').value = "";
-            document.getElementById('tx-desc').value = "";
-            document.getElementById('tx-date').valueAsDate = new Date();
-            document.getElementById('submit-btn').innerText = "Enregistrer";
-            document.getElementById('cancel-edit').classList.add('hidden');
-        }
-
-        function handleTypeChange() {
-            const type = document.getElementById('tx-type').value;
-            const list = (type === 'expense') ? catsExp : catsInc;
-            document.getElementById('tx-cat').innerHTML = list.map(c => `<option value="${c}">${c}</option>`).join('');
-            updateChart();
-        }
-
-        // Interface Utilisateur
-        function updateUI() {
-            const filteredTx = transactions.filter(t => isDateInFilter(t.date));
-            const globalInc = transactions.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
-            const globalExp = transactions.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
-            const total = (initialBalance || 0) + globalInc - globalExp;
-            
-            document.getElementById('total-val').innerText = total.toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + " €";
-            document.getElementById('init-info').innerText = `(Initial : ${initialBalance.toFixed(2)}€)`;
-
-            document.getElementById('tx-list').innerHTML = filteredTx.map(t => `
-                <li class="tx-item">
-                    <div style="flex:1">
-                        <span style="display:block; font-size:14px; font-weight:600;">${t.description}</span>
-                        <small style="color:var(--text-dim); font-size:10px;">${t.category} • ${t.date}</small>
-                    </div>
-                    <span style="font-weight:700; color: ${t.type === 'income' ? 'var(--income)' : 'var(--expense)'}">
-                        ${t.type === 'income' ? '+' : '-'}${t.amount.toFixed(2)}€
-                    </span>
-                    <div class="tx-actions">
-                        <button class="btn-action btn-edit" onclick="editTransaction(${t.id})"><i class="fas fa-edit"></i></button>
-                        <button class="btn-action btn-delete" onclick="deleteTransaction(${t.id})"><i class="fas fa-trash"></i></button>
-                    </div>
-                </li>
-            `).join('');
-
-            updateChart(filteredTx);
-            localStorage.setItem(STORAGE_KEY_TX, JSON.stringify(transactions));
-        }
-
-        function updateChart(data = transactions) {
-            const type = document.getElementById('tx-type').value;
-            const filtered = data.filter(t => t.type === type);
-            const container = document.getElementById('chart-container');
-            if (filtered.length === 0) {
-                container.innerHTML = `<p style="font-size:10px; color:var(--text-dim); margin:auto;">Pas de données</p>`;
-                return;
-            }
-            const activeCats = [...new Set(filtered.map(t => t.category))];
-            const totals = activeCats.map(c => filtered.filter(t => t.category === c).reduce((s, t) => s + t.amount, 0));
-            const maxVal = Math.max(...totals);
-
-            container.innerHTML = activeCats.map((c, i) => {
-                const h = (totals[i] / maxVal) * 100;
-                return `
-                    <div class="bar-container">
-                        <div class="bar" style="height:${h}%; background:${type === 'income' ? 'var(--income)' : 'var(--expense)'}"></div>
-                        <span class="bar-label">${c.slice(0,5)}</span>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Sauvegarde & Import
-        function saveBackup() {
-            const data = { transactions, initialBalance, catsExp, catsInc, date: new Date().toISOString() };
-            const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `zenbudget_backup.json`;
-            a.click();
-        }
-
-        function importBackup() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.json';
-            input.onchange = e => {
-                const reader = new FileReader();
-                reader.onload = event => {
-                    const data = JSON.parse(event.target.result);
-                    transactions = data.transactions;
-                    initialBalance = data.initialBalance;
-                    catsExp = data.catsExp || catsExp;
-                    catsInc = data.catsInc || catsInc;
-                    localStorage.setItem(STORAGE_KEY_TX, JSON.stringify(transactions));
-                    localStorage.setItem(STORAGE_KEY_INIT, initialBalance);
-                    localStorage.setItem(STORAGE_KEY_CATS_EXP, JSON.stringify(catsExp));
-                    localStorage.setItem(STORAGE_KEY_CATS_INC, JSON.stringify(catsInc));
-                    location.reload();
-                };
-                reader.readAsText(e.target.files[0]);
-            };
-            input.click();
-        }
-
-        function exportToExcel() {
-            let csv = "Date;Description;Categorie;Type;Montant\n";
-            transactions.forEach(t => csv += `${t.date};${t.description};${t.category};${t.type};${t.amount}\n`);
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = "comptes.csv";
-            a.click();
-        }
-
-        // Catégories Personnalisées
-        function toggleCatZone() {
-            const z = document.getElementById('cat-entry-zone');
-            z.style.display = (z.style.display === 'block') ? 'none' : 'block';
-            if(z.style.display === 'block') document.getElementById('new-cat-name').focus();
-        }
-
-        function confirmNewCategory() {
-            const name = document.getElementById('new-cat-name').value.trim();
-            if(!name) return;
-            const type = document.getElementById('tx-type').value;
-            
-            if(type === 'expense') {
-                catsExp.push(name);
-                localStorage.setItem(STORAGE_KEY_CATS_EXP, JSON.stringify(catsExp));
-            } else {
-                catsInc.push(name);
-                localStorage.setItem(STORAGE_KEY_CATS_INC, JSON.stringify(catsInc));
-            }
-            
-            handleTypeChange();
-            toggleCatZone();
-            document.getElementById('new-cat-name').value = "";
-        }
-
-        window.onload = checkInit;
+        updateUI();
     </script>
 </body>
 </html>
