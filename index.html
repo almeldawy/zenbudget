@@ -1,34 +1,45 @@
 <!DOCTYPE html>
+<!-- 
+    HTML est le squelette de la page. 
+    lang="fr" indique au navigateur que le contenu est en français.
+-->
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
+    <!-- MÉTADONNÉES (Informations invisibles pour l'utilisateur mais utiles au navigateur) -->
+    <meta charset="UTF-8"> <!-- Permet d'afficher les accents (é, à, ù) -->
+    
+    <!-- IMPORTANT POUR MOBILE : Dit au téléphone d'utiliser toute la largeur de l'écran sans zoomer -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>ZenBudget Pro - Gestion Totale</title>
     
-    <!-- --- AJOUT PWA : CONNEXION AU MANIFESTE --- -->
+    <!-- --- AJOUT PWA : LA CARTE D'IDENTITÉ DE L'APP --- -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#6366f1">
-    <!-- Icône pour iPhone (assurez-vous d'avoir une icône ou retirez cette ligne si inutile) -->
+    <meta name="theme-color" content="#6366f1"> <!-- La couleur de la barre du navigateur sur mobile -->
     <link rel="apple-touch-icon" href="apple-touch-icon.png"> 
     
+    <!-- POLICES ET ICÔNES (Comme aller chercher des autocollants sur un autre site) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
+    <!-- STYLE (CSS) : Le maquillage et la mise en page -->
     <style>
+        /* :root est comme une palette de peinture. On définit les couleurs ici pour les réutiliser partout */
         :root {
-            --primary: #6366f1;
-            --bg-dark: #0f172a;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --text-main: #f8fafc;
-            --text-dim: #94a3b8;
-            --border: rgba(255, 255, 255, 0.1);
-            --input-bg: #1e293b;
-            --shadow: rgba(0, 0, 0, 0.5);
-            --income: #10b981;
-            --expense: #ef4444;
+            --primary: #6366f1; /* Violet principal */
+            --bg-dark: #0f172a; /* Fond sombre */
+            --card-bg: rgba(255, 255, 255, 0.05); /* Fond transparent des cartes */
+            --text-main: #f8fafc; /* Texte blanc */
+            --text-dim: #94a3b8; /* Texte gris (moins important) */
+            --border: rgba(255, 255, 255, 0.1); /* Bordures fines */
+            --input-bg: #1e293b; /* Fond des champs de saisie */
+            --shadow: rgba(0, 0, 0, 0.5); /* Ombres */
+            --income: #10b981; /* Vert pour revenus */
+            --expense: #ef4444; /* Rouge pour dépenses */
             --premium-gold: #f59e0b;
         }
 
+        /* Mode Clair (activé par JavaScript) */
         .light-mode {
             --bg-dark: #f1f5f9;
             --card-bg: #ffffff;
@@ -39,44 +50,46 @@
             --shadow: rgba(0, 0, 0, 0.1);
         }
 
+        /* Style général du corps de la page */
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-dark);
             color: var(--text-main);
             margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            display: flex; /* Flexbox : outil magique pour aligner les éléments */
+            justify-content: center; /* Centre horizontalement */
+            align-items: center; /* Centre verticalement */
+            min-height: 100vh; /* Prend au moins toute la hauteur de l'écran */
             padding: 15px;
-            box-sizing: border-box;
-            transition: background-color 0.3s ease;
+            box-sizing: border-box; /* S'assure que les marges ne cassent pas la largeur */
+            transition: background-color 0.3s ease; /* Animation douce pour le changement de thème */
         }
 
+        /* La carte principale (le conteneur de l'app) */
         .app-card {
             background: var(--card-bg);
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(15px); /* Effet de flou derrière (comme du verre dépoli) */
             border: 1px solid var(--border);
             width: 100%;
-            max-width: 440px;
+            max-width: 440px; /* Ne deviendra jamais plus large que ça sur PC */
             padding: 25px;
-            border-radius: 32px;
+            border-radius: 32px; /* Coins arrondis */
             box-shadow: 0 25px 50px -12px var(--shadow);
             position: relative;
         }
 
-        /* Fenêtres de dialogue personnalisées */
+        /* Style pour les fenêtres pop-up (Modales) */
         .custom-modal {
-            display: none;
+            display: none; /* Caché par défaut */
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%); /* Astuce pour centrer parfaitement */
             background: var(--input-bg);
             border: 1px solid var(--primary);
             padding: 20px;
             border-radius: 20px;
-            z-index: 100;
+            z-index: 100; /* Z-index : met l'élément au-dessus des autres (comme des couches) */
             width: 85%;
             text-align: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
@@ -84,7 +97,7 @@
 
         .global-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-between; /* Pousse les éléments aux extrémités */
             align-items: center;
             margin-bottom: 20px;
         }
@@ -94,8 +107,8 @@
             border: 1px solid var(--border);
             color: var(--text-main);
             padding: 8px;
-            border-radius: 50%;
-            cursor: pointer;
+            border-radius: 50%; /* Rond parfait */
+            cursor: pointer; /* Affiche la main au survol */
             width: 36px;
             height: 36px;
             display: flex;
@@ -104,7 +117,7 @@
         }
 
         .pro-badge {
-            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+            background: linear-gradient(90deg, #f59e0b, #fbbf24); /* Dégradé doré */
             color: #000;
             font-size: 11px;
             padding: 4px 10px;
@@ -123,7 +136,7 @@
         }
 
         .edit-init-btn {
-            position: absolute;
+            position: absolute; /* Position libre à l'intérieur du parent */
             top: 15px;
             right: 15px;
             background: rgba(255, 255, 255, 0.2);
@@ -138,11 +151,12 @@
 
         .edit-init-btn:hover { background: rgba(255, 255, 255, 0.4); }
 
+        /* Barre de filtres (Tout, Semaine, Mois...) */
         .filter-bar {
             display: flex;
             gap: 5px;
             margin-bottom: 15px;
-            overflow-x: auto;
+            overflow-x: auto; /* Permet de scroller horizontalement si ça dépasse */
             padding-bottom: 5px;
         }
 
@@ -154,7 +168,7 @@
             border-radius: 20px;
             font-size: 11px;
             cursor: pointer;
-            white-space: nowrap;
+            white-space: nowrap; /* Empêche le texte de passer à la ligne */
             transition: all 0.2s;
         }
 
@@ -172,7 +186,7 @@
 
         .chart-bars {
             display: flex;
-            align-items: flex-end;
+            align-items: flex-end; /* Aligne les barres par le bas */
             gap: 12px;
             height: 80px;
             overflow-x: auto;
@@ -184,13 +198,14 @@
 
         .input-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
 
+        /* Style commun pour tous les champs de texte et listes déroulantes */
         input, select {
             background: var(--input-bg);
             border: 1px solid var(--border);
             padding: 12px;
             border-radius: 12px;
             color: var(--text-main);
-            outline: none;
+            outline: none; /* Enlève le contour bleu par défaut du navigateur */
             font-size: 14px;
         }
 
@@ -219,8 +234,8 @@
         .btn-delete { color: var(--expense); }
 
         .utility-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: grid; /* Grille pour aligner les boutons utilitaires */
+            grid-template-columns: 1fr 1fr; /* 2 colonnes de même taille */
             gap: 10px;
             margin-top: 20px;
         }
@@ -248,25 +263,38 @@
             border: 1px solid var(--primary);
         }
 
-        /* Classes utilitaires */
+        /* Classes utilitaires (outils rapides) */
         .hidden { display: none !important; }
+        
+        /* Personnalisation de la barre de défilement (Scrollbar) */
         ::-webkit-scrollbar { height: 4px; width: 4px; }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 
+        /* --- CORRECTION VISIBILITÉ BOUTON PLUS (+) SUR MOBILE --- */
         .btn-plus-cat {
             background: var(--input-bg); 
             border: 1px solid var(--border); 
             color: var(--text-main); 
-            border-radius: 10px; 
-            padding: 0 12px; 
+            border-radius: 12px; /* Coins un peu plus arrondis */
             cursor: pointer;
+            
+            /* -- MODIFICATIONS -- */
+            min-width: 50px; /* Largeur MINIMALE forcée (évite l'écrasement) */
+            height: 45px;    /* Hauteur fixe pour être facile à cliquer */
+            display: flex;   /* Pour bien centrer le + */
+            align-items: center;
+            justify-content: center;
+            font-size: 24px; /* Le "+" est plus gros */
+            font-weight: bold;
+            flex-shrink: 0;  /* CRUCIAL : Interdit au bouton de rétrécir si l'écran est petit */
+            margin-left: 5px; /* Petit espace avec le champ d'à côté */
         }
     </style>
 </head>
 <body>
 
     <div class="app-card">
-        <!-- Boîte de RESET (Confirmation) -->
+        <!-- Boîte de dialogue : Confirmation de suppression totale -->
         <div id="custom-confirm" class="custom-modal">
             <p style="font-size: 14px; margin-bottom: 15px;">Voulez-vous vraiment effacer toutes les données ?</p>
             <div style="display: flex; gap: 10px;">
@@ -275,7 +303,7 @@
             </div>
         </div>
 
-        <!-- Boîte de modification du SOLDE INITIAL (Saisie) -->
+        <!-- Boîte de dialogue : Modifier le solde initial -->
         <div id="modal-edit-init" class="custom-modal">
             <p style="font-size: 14px; margin-bottom: 15px; font-weight: 600;">Nouveau solde de départ</p>
             <input type="number" id="input-new-init" style="width: 80%; margin-bottom: 15px;" placeholder="Ex: 1500">
@@ -285,6 +313,7 @@
             </div>
         </div>
 
+        <!-- En-tête de l'application -->
         <header class="global-header">
             <div style="display: flex; align-items: center; gap: 10px;">
                 <button class="theme-toggle" onclick="toggleTheme()">
@@ -295,7 +324,7 @@
             <span class="pro-badge">Pro</span>
         </header>
 
-        <!-- ÉCRAN 1: INITIALISATION (N'apparaît que si le solde est vide) -->
+        <!-- ÉCRAN 1: INITIALISATION (Si c'est la première fois) -->
         <div id="setup-screen" class="hidden">
             <h2 style="text-align: center; font-size: 20px; margin-bottom: 20px;">Bienvenue</h2>
             <p style="text-align: center; font-size: 12px; color: var(--text-dim); margin-bottom: 20px;">Veuillez indiquer votre solde actuel pour commencer.</p>
@@ -307,6 +336,7 @@
 
         <!-- ÉCRAN 2: APPLICATION PRINCIPALE -->
         <div id="main-app" class="hidden">
+            <!-- Carte du solde (Le gros chiffre) -->
             <div class="balance-card">
                 <button class="edit-init-btn" onclick="openInitModal()" title="Modifier le solde de départ">
                     <i class="fas fa-pencil-alt"></i>
@@ -316,6 +346,7 @@
                 <div id="init-info" style="font-size: 9px; opacity: 0.8; margin-top: -5px;"></div>
             </div>
 
+            <!-- Barre de filtres (Tout, Semaine...) -->
             <div class="filter-bar">
                 <button class="filter-btn active" onclick="setFilter('all', this)">Tout</button>
                 <button class="filter-btn" onclick="setFilter('week', this)">Semaine</button>
@@ -323,11 +354,13 @@
                 <button class="filter-btn" onclick="setFilter('year', this)">Année</button>
             </div>
 
+            <!-- Graphique simplifié (Barres) -->
             <div class="chart-section">
                 <span class="chart-title" id="chart-type-label">Analyse des flux</span>
                 <div class="chart-bars" id="chart-container"></div>
             </div>
 
+            <!-- Zone cachée pour ajouter une nouvelle catégorie -->
             <div id="cat-entry-zone">
                 <span style="font-size: 10px; color: var(--primary); font-weight: 700;">NOUVELLE CATÉGORIE</span>
                 <div style="display: flex; gap: 8px; margin-top: 5px;">
@@ -336,6 +369,7 @@
                 </div>
             </div>
 
+            <!-- Formulaire d'ajout de transaction -->
             <div class="input-group">
                 <input type="hidden" id="edit-id" value="">
                 
@@ -347,9 +381,11 @@
                     <input type="date" id="tx-date" style="flex: 1;">
                 </div>
                 
-                <div style="display: flex; gap: 8px;">
+                <!-- LIGNE AVEC LE BOUTON + CORRIGÉ -->
+                <div style="display: flex; gap: 8px; align-items: center;">
                     <input type="number" id="tx-amount" placeholder="Montant" style="flex: 1;">
                     <select id="tx-cat" style="flex: 1;"></select>
+                    <!-- Le bouton "+" est ici -->
                     <button onclick="toggleCatZone()" class="btn-plus-cat" title="Ajouter une catégorie">+</button>
                 </div>
 
@@ -361,6 +397,7 @@
             <span style="font-size: 11px; color: var(--text-dim); font-weight: 600;">HISTORIQUE</span>
             <ul class="tx-list" id="tx-list"></ul>
 
+            <!-- Boutons du bas (Excel, Backup...) -->
             <div class="utility-grid">
                 <button class="btn-utility" onclick="exportToExcel()"><i class="fas fa-file-excel"></i> Excel</button>
                 <button class="btn-utility" onclick="saveBackup()"><i class="fas fa-save"></i> Backup</button>
@@ -370,12 +407,12 @@
         </div>
     </div>
 
+    <!-- JAVASCRIPT : Le cerveau de la page (Logique) -->
     <script>
         // --- AJOUT PWA : ENREGISTREMENT DU SERVICE WORKER (SW) ---
-        // On vérifie si le navigateur supporte les Service Workers
+        // Le concierge qui permet à l'app de marcher hors-ligne
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                // On essaie de charger le fichier sw.js qui doit être à la racine de votre dépôt
                 navigator.serviceWorker.register('sw.js')
                     .then(registration => {
                         console.log('Service Worker enregistré avec succès:', registration.scope);
@@ -387,71 +424,82 @@
         }
         // ---------------------------------------------------------
 
+        // --- VARIABLES GLOBALES (Les boîtes où on range les données) ---
+        // Clés pour retrouver les données dans la mémoire du navigateur (localStorage)
         const STORAGE_KEY_TX = 'zb_pro_v8_tx';
         const STORAGE_KEY_INIT = 'zb_pro_v8_init';
         const STORAGE_KEY_THEME = 'zb_pro_v8_theme';
 
+        // Chargement des transactions existantes ou liste vide []
         let transactions = JSON.parse(localStorage.getItem(STORAGE_KEY_TX)) || [];
+        // Chargement du solde initial
         let initialBalance = localStorage.getItem(STORAGE_KEY_INIT);
         
-        // Convertir en nombre si ce n'est pas vide
+        // Convertir en nombre si ce n'est pas vide (sinon c'est du texte)
         if (initialBalance !== null) initialBalance = parseFloat(initialBalance);
 
-        // Récupération des catégories depuis le localStorage ou valeurs par défaut
-        // NOTE: Ajouté pour corriger le problème si les variables ne sont pas définies ailleurs
+        // Clés pour les catégories
         const STORAGE_KEY_CATS_EXP = 'zb_pro_v8_cats_exp';
         const STORAGE_KEY_CATS_INC = 'zb_pro_v8_cats_inc';
+        // Chargement des catégories ou utilisation des valeurs par défaut
         let catsExp = JSON.parse(localStorage.getItem(STORAGE_KEY_CATS_EXP)) || ["Alimentation", "Transport", "Loisirs", "Logement", "Santé"];
         let catsInc = JSON.parse(localStorage.getItem(STORAGE_KEY_CATS_INC)) || ["Salaire", "Vente", "Cadeau"];
 
-        let currentFilter = 'all';
+        let currentFilter = 'all'; // Filtre actuel (Tout voir par défaut)
 
+        // --- FONCTIONS D'AFFICHAGE ---
+
+        // Applique le thème (clair ou sombre) au chargement
         function applyTheme() {
             const theme = localStorage.getItem(STORAGE_KEY_THEME);
             const icon = document.getElementById('theme-icon');
             if (theme === 'light') {
                 document.body.classList.add('light-mode');
-                icon.className = 'fas fa-sun';
+                icon.className = 'fas fa-sun'; // Icône soleil
             } else {
                 document.body.classList.remove('light-mode');
-                icon.className = 'fas fa-moon';
+                icon.className = 'fas fa-moon'; // Icône lune
             }
         }
 
+        // Bascule entre les modes quand on clique sur le bouton
         function toggleTheme() {
             const isLight = document.body.classList.toggle('light-mode');
-            localStorage.setItem(STORAGE_KEY_THEME, isLight ? 'light' : 'dark');
+            localStorage.setItem(STORAGE_KEY_THEME, isLight ? 'light' : 'dark'); // Sauvegarde le choix
             applyTheme();
         }
 
         // --- LA LOGIQUE DE DÉMARRAGE ---
         function checkInit() {
             applyTheme();
+            // Met la date d'aujourd'hui dans le champ date
             document.getElementById('tx-date').valueAsDate = new Date();
             
             // Si le solde initial n'est pas trouvé en mémoire (première utilisation)
             if (initialBalance === null || isNaN(initialBalance)) {
+                // Affiche l'écran de bienvenue
                 document.getElementById('setup-screen').classList.remove('hidden');
                 document.getElementById('main-app').classList.add('hidden');
             } else {
-                // Sinon, on affiche directement l'application
+                // Sinon, affiche l'application principale
                 document.getElementById('setup-screen').classList.add('hidden');
                 document.getElementById('main-app').classList.remove('hidden');
-                handleTypeChange();
-                updateUI();
+                handleTypeChange(); // Met à jour les catégories
+                updateUI(); // Met à jour l'affichage
             }
         }
 
+        // Sauvegarde le premier solde entré par l'utilisateur
         function saveInitialBalance() {
             const val = parseFloat(document.getElementById('initial-balance-input').value);
             if (!isNaN(val)) {
                 initialBalance = val;
-                localStorage.setItem(STORAGE_KEY_INIT, initialBalance);
-                checkInit(); // On relance la vérification pour changer d'écran
+                localStorage.setItem(STORAGE_KEY_INIT, initialBalance); // Écrit dans la mémoire
+                checkInit(); // Recharge pour passer à l'écran suivant
             }
         }
 
-        // --- GESTION DES MODALES ---
+        // --- GESTION DES MODALES (Les petites fenêtres) ---
         function openModal(id) {
             document.getElementById(id).style.display = 'block';
         }
@@ -475,74 +523,90 @@
             }
         }
 
+        // Efface tout (Reset usine)
         function executeHardReset() {
-            localStorage.clear();
-            window.location.reload();
+            localStorage.clear(); // Vide la mémoire locale
+            window.location.reload(); // Recharge la page
         }
 
-        // --- LOGIQUE MÉTIER ---
+        // --- LOGIQUE MÉTIER (Calculs et tris) ---
         function setFilter(filter, btn) {
             currentFilter = filter;
+            // Retire la classe 'active' de tous les boutons
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            // Ajoute la classe 'active' au bouton cliqué
             btn.classList.add('active');
             updateUI();
         }
 
+        // Vérifie si une date correspond au filtre actuel
         function isDateInFilter(txDateStr) {
             if (currentFilter === 'all') return true;
+            // Transforme "25/12/2023" en objet Date
             const parts = txDateStr.split('/');
             const txDate = new Date(parts[2], parts[1] - 1, parts[0]);
             const now = new Date();
+            
+            // Calcul de la différence
             const diffTime = Math.abs(now - txDate);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
             if (currentFilter === 'week') return diffDays <= 7;
             if (currentFilter === 'month') return txDate.getMonth() === now.getMonth() && txDate.getFullYear() === now.getFullYear();
             if (currentFilter === 'year') return txDate.getFullYear() === now.getFullYear();
             return true;
         }
 
+        // Ajoute ou modifie une transaction
         function processTransaction() {
-            const id = document.getElementById('edit-id').value;
+            const id = document.getElementById('edit-id').value; // Si ID existe, c'est une modif
             const type = document.getElementById('tx-type').value;
             const amt = parseFloat(document.getElementById('tx-amount').value);
             const cat = document.getElementById('tx-cat').value;
-            const desc = document.getElementById('tx-desc').value.trim() || cat;
+            const desc = document.getElementById('tx-desc').value.trim() || cat; // Description ou nom de catégorie par défaut
             const dateVal = document.getElementById('tx-date').value;
 
-            if (isNaN(amt) || !dateVal) return;
+            if (isNaN(amt) || !dateVal) return; // Sécurité si champs vides
 
             const d = new Date(dateVal);
-            const dateFormatted = d.toLocaleDateString('fr-FR');
+            const dateFormatted = d.toLocaleDateString('fr-FR'); // Format français
 
             if (id) {
+                // Mode Modification : on trouve l'ancienne et on remplace
                 const index = transactions.findIndex(t => t.id == id);
                 transactions[index] = { ...transactions[index], type, amount: amt, category: cat, description: desc, date: dateFormatted };
             } else {
+                // Mode Création : on ajoute au début du tableau (unshift)
                 transactions.unshift({
-                    id: Date.now(),
+                    id: Date.now(), // Utilise l'heure exacte comme ID unique
                     type, amount: amt, category: cat, description: desc,
                     date: dateFormatted
                 });
             }
-            resetForm();
-            updateUI();
+            resetForm(); // Vide le formulaire
+            updateUI(); // Met à jour l'écran
         }
 
         function deleteTransaction(id) {
+            // Garde toutes les transactions SAUF celle qu'on veut supprimer
             transactions = transactions.filter(t => t.id !== id);
             updateUI();
         }
 
+        // Remplit le formulaire avec les infos de la transaction à modifier
         function editTransaction(id) {
             const t = transactions.find(tx => tx.id === id);
             document.getElementById('edit-id').value = t.id;
             document.getElementById('tx-type').value = t.type;
-            handleTypeChange();
+            handleTypeChange(); // Met à jour la liste des catégories
             document.getElementById('tx-cat').value = t.category;
             document.getElementById('tx-amount').value = t.amount;
             document.getElementById('tx-desc').value = t.description;
+            
+            // Conversion de date pour l'input date (format yyyy-mm-dd)
             const parts = t.date.split('/');
             document.getElementById('tx-date').value = `${parts[2]}-${parts[1]}-${parts[0]}`;
+            
             document.getElementById('submit-btn').innerText = "Mettre à jour";
             document.getElementById('cancel-edit').classList.remove('hidden');
         }
@@ -556,22 +620,30 @@
             document.getElementById('cancel-edit').classList.add('hidden');
         }
 
+        // Change la liste des catégories selon si c'est Dépense ou Revenu
         function handleTypeChange() {
             const type = document.getElementById('tx-type').value;
             const list = (type === 'expense') ? catsExp : catsInc;
+            // Génère le HTML des options <option>
             document.getElementById('tx-cat').innerHTML = list.map(c => `<option value="${c}">${c}</option>`).join('');
             updateChart();
         }
 
+        // La fonction principale qui redessine tout l'écran
         function updateUI() {
+            // Filtre les transactions selon la date choisie
             const filteredTx = transactions.filter(t => isDateInFilter(t.date));
+            
+            // Calcule les totaux
             const globalInc = transactions.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
             const globalExp = transactions.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
             const total = (initialBalance || 0) + globalInc - globalExp;
             
+            // Affiche le solde
             document.getElementById('total-val').innerText = total.toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + " €";
             document.getElementById('init-info').innerText = `(Initial : ${initialBalance.toFixed(2)}€)`;
 
+            // Génère la liste HTML des transactions
             document.getElementById('tx-list').innerHTML = filteredTx.map(t => `
                 <li class="tx-item">
                     <div style="flex:1">
@@ -589,21 +661,28 @@
             `).join('');
 
             updateChart(filteredTx);
+            // Sauvegarde tout dans le navigateur
             localStorage.setItem(STORAGE_KEY_TX, JSON.stringify(transactions));
         }
 
+        // Dessine les barres du graphique
         function updateChart(data = transactions) {
             const type = document.getElementById('tx-type').value;
             const filtered = data.filter(t => t.type === type);
             const container = document.getElementById('chart-container');
+            
             if (filtered.length === 0) {
                 container.innerHTML = `<p style="font-size:10px; color:var(--text-dim); margin:auto;">Pas de données</p>`;
                 return;
             }
+            
+            // Trouve les catégories uniques utilisées
             const activeCats = [...new Set(filtered.map(t => t.category))];
+            // Calcule le total pour chaque catégorie
             const totals = activeCats.map(c => filtered.filter(t => t.category === c).reduce((s, t) => s + t.amount, 0));
-            const maxVal = Math.max(...totals);
+            const maxVal = Math.max(...totals); // Pour savoir quelle barre est la plus haute (100%)
 
+            // Génère les barres HTML
             container.innerHTML = activeCats.map((c, i) => {
                 const h = (totals[i] / maxVal) * 100;
                 return `
@@ -615,6 +694,7 @@
             }).join('');
         }
 
+        // Génère un fichier .json à télécharger
         function saveBackup() {
             const data = { transactions, initialBalance, date: new Date().toISOString() };
             const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
@@ -625,6 +705,7 @@
             a.click();
         }
 
+        // Lit un fichier .json uploadé par l'utilisateur
         function importBackup() {
             const input = document.createElement('input');
             input.type = 'file';
@@ -644,6 +725,7 @@
             input.click();
         }
 
+        // Génère un fichier CSV (compatible Excel)
         function exportToExcel() {
             let csv = "Date;Description;Categorie;Type;Montant\n";
             transactions.forEach(t => csv += `${t.date};${t.description};${t.category};${t.type};${t.amount}\n`);
@@ -655,15 +737,18 @@
             a.click();
         }
 
+        // Affiche/Cache la zone d'ajout de catégorie
         function toggleCatZone() {
             const z = document.getElementById('cat-entry-zone');
             z.style.display = (z.style.display === 'block') ? 'none' : 'block';
         }
 
+        // Confirme l'ajout d'une nouvelle catégorie
         function confirmNewCategory() {
             const name = document.getElementById('new-cat-name').value.trim();
             if(!name) return;
             const type = document.getElementById('tx-type').value;
+            
             if(type === 'expense') {
                 catsExp.push(name);
                 localStorage.setItem(STORAGE_KEY_CATS_EXP, JSON.stringify(catsExp));
@@ -676,7 +761,7 @@
             document.getElementById('new-cat-name').value = "";
         }
 
-        // Lancement initial
+        // Démarre l'application quand la page est chargée
         window.onload = checkInit;
     </script>
 </body>
