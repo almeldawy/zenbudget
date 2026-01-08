@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZenBudget Pro - Gestion Totale</title>
+    
+    <!-- --- AJOUT PWA : CONNEXION AU MANIFESTE --- -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6366f1">
+    <!-- Icône pour iPhone (assurez-vous d'avoir une icône ou retirez cette ligne si inutile) -->
+    <link rel="apple-touch-icon" href="apple-touch-icon.png"> 
+    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -364,6 +371,22 @@
     </div>
 
     <script>
+        // --- AJOUT PWA : ENREGISTREMENT DU SERVICE WORKER (SW) ---
+        // On vérifie si le navigateur supporte les Service Workers
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // On essaie de charger le fichier sw.js qui doit être à la racine de votre dépôt
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('Service Worker enregistré avec succès:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Échec de l\'enregistrement du Service Worker:', error);
+                    });
+            });
+        }
+        // ---------------------------------------------------------
+
         const STORAGE_KEY_TX = 'zb_pro_v8_tx';
         const STORAGE_KEY_INIT = 'zb_pro_v8_init';
         const STORAGE_KEY_THEME = 'zb_pro_v8_theme';
@@ -374,8 +397,13 @@
         // Convertir en nombre si ce n'est pas vide
         if (initialBalance !== null) initialBalance = parseFloat(initialBalance);
 
-        let catsExp = ["Alimentation", "Transport", "Loisirs", "Logement", "Santé"];
-        let catsInc = ["Salaire", "Vente", "Cadeau"];
+        // Récupération des catégories depuis le localStorage ou valeurs par défaut
+        // NOTE: Ajouté pour corriger le problème si les variables ne sont pas définies ailleurs
+        const STORAGE_KEY_CATS_EXP = 'zb_pro_v8_cats_exp';
+        const STORAGE_KEY_CATS_INC = 'zb_pro_v8_cats_inc';
+        let catsExp = JSON.parse(localStorage.getItem(STORAGE_KEY_CATS_EXP)) || ["Alimentation", "Transport", "Loisirs", "Logement", "Santé"];
+        let catsInc = JSON.parse(localStorage.getItem(STORAGE_KEY_CATS_INC)) || ["Salaire", "Vente", "Cadeau"];
+
         let currentFilter = 'all';
 
         function applyTheme() {
@@ -448,8 +476,7 @@
         }
 
         function executeHardReset() {
-            localStorage.removeItem(STORAGE_KEY_TX);
-            localStorage.removeItem(STORAGE_KEY_INIT);
+            localStorage.clear();
             window.location.reload();
         }
 
@@ -637,7 +664,13 @@
             const name = document.getElementById('new-cat-name').value.trim();
             if(!name) return;
             const type = document.getElementById('tx-type').value;
-            if(type === 'expense') catsExp.push(name); else catsInc.push(name);
+            if(type === 'expense') {
+                catsExp.push(name);
+                localStorage.setItem(STORAGE_KEY_CATS_EXP, JSON.stringify(catsExp));
+            } else {
+                catsInc.push(name);
+                localStorage.setItem(STORAGE_KEY_CATS_INC, JSON.stringify(catsInc));
+            }
             handleTypeChange();
             toggleCatZone();
             document.getElementById('new-cat-name').value = "";
