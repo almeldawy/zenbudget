@@ -1,45 +1,45 @@
 <!DOCTYPE html>
 <!-- 
-    HTML est le squelette de la page. 
-    lang="fr" indique au navigateur que le contenu est en français.
+    CECI EST LE FICHIER PRINCIPAL (index.html)
+    HTML = Le squelette de la page (les murs de la maison).
 -->
 <html lang="fr">
 <head>
-    <!-- MÉTADONNÉES (Informations invisibles pour l'utilisateur mais utiles au navigateur) -->
-    <meta charset="UTF-8"> <!-- Permet d'afficher les accents (é, à, ù) -->
+    <!-- MÉTADONNÉES : Ce que le navigateur doit savoir avant d'afficher la page -->
+    <meta charset="UTF-8"> <!-- Pour gérer les accents français -->
     
-    <!-- IMPORTANT POUR MOBILE : Dit au téléphone d'utiliser toute la largeur de l'écran sans zoomer -->
+    <!-- RESPONSIVE : Indispensable pour que ça soit beau sur mobile -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <title>ZenBudget Pro - Gestion Totale</title>
     
-    <!-- --- AJOUT PWA : LA CARTE D'IDENTITÉ DE L'APP --- -->
+    <!-- PWA : La carte d'identité pour l'installation sur téléphone -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#6366f1"> <!-- La couleur de la barre du navigateur sur mobile -->
-    <link rel="apple-touch-icon" href="apple-touch-icon.png"> 
+    <meta name="theme-color" content="#6366f1">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png"> 
     
-    <!-- POLICES ET ICÔNES (Comme aller chercher des autocollants sur un autre site) -->
+    <!-- POLICES D'ÉCRITURE ET ICÔNES (Décoration) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <!-- STYLE (CSS) : Le maquillage et la mise en page -->
+    <!-- CSS : Le style, les couleurs, la mise en page (La peinture et les meubles) -->
     <style>
-        /* :root est comme une palette de peinture. On définit les couleurs ici pour les réutiliser partout */
+        /* :root = La palette de couleurs. On change ici, ça change partout. */
         :root {
             --primary: #6366f1; /* Violet principal */
-            --bg-dark: #0f172a; /* Fond sombre */
-            --card-bg: rgba(255, 255, 255, 0.05); /* Fond transparent des cartes */
-            --text-main: #f8fafc; /* Texte blanc */
-            --text-dim: #94a3b8; /* Texte gris (moins important) */
-            --border: rgba(255, 255, 255, 0.1); /* Bordures fines */
-            --input-bg: #1e293b; /* Fond des champs de saisie */
+            --bg-dark: #0f172a; /* Fond de l'écran */
+            --card-bg: rgba(255, 255, 255, 0.05); /* Fond des blocs */
+            --text-main: #f8fafc; /* Couleur du texte */
+            --text-dim: #94a3b8; /* Texte gris clair */
+            --border: rgba(255, 255, 255, 0.1); /* Bordures discrètes */
+            --input-bg: #1e293b; /* Fond des champs où on écrit */
             --shadow: rgba(0, 0, 0, 0.5); /* Ombres */
-            --income: #10b981; /* Vert pour revenus */
-            --expense: #ef4444; /* Rouge pour dépenses */
+            --income: #10b981; /* Vert (argent qui rentre) */
+            --expense: #ef4444; /* Rouge (argent qui sort) */
             --premium-gold: #f59e0b;
         }
 
-        /* Mode Clair (activé par JavaScript) */
+        /* Mode Clair : On inverse les couleurs si l'utilisateur veut du blanc */
         .light-mode {
             --bg-dark: #f1f5f9;
             --card-bg: #ffffff;
@@ -50,74 +50,72 @@
             --shadow: rgba(0, 0, 0, 0.1);
         }
 
-        /* Style général du corps de la page */
+        /* BODY : Le corps de la page */
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-dark);
             color: var(--text-main);
             margin: 0;
-            display: flex; /* Flexbox : outil magique pour aligner les éléments */
+            display: flex; /* Aligne les éléments intelligemment */
             justify-content: center; /* Centre horizontalement */
             align-items: center; /* Centre verticalement */
-            min-height: 100vh; /* Prend au moins toute la hauteur de l'écran */
+            min-height: 100vh; /* Prend toute la hauteur de l'écran */
             padding: 15px;
-            box-sizing: border-box; /* S'assure que les marges ne cassent pas la largeur */
-            transition: background-color 0.3s ease; /* Animation douce pour le changement de thème */
+            box-sizing: border-box;
+            transition: background-color 0.3s ease; /* Animation fluide */
         }
 
-        /* La carte principale (le conteneur de l'app) */
+        /* LA CARTE PRINCIPALE : Le cadre qui contient toute l'app */
         .app-card {
             background: var(--card-bg);
-            backdrop-filter: blur(15px); /* Effet de flou derrière (comme du verre dépoli) */
+            backdrop-filter: blur(15px); /* Effet de flou "verre dépoli" */
             border: 1px solid var(--border);
             width: 100%;
-            max-width: 440px; /* Ne deviendra jamais plus large que ça sur PC */
+            max-width: 440px; /* Largeur max comme un gros téléphone */
             padding: 25px;
-            border-radius: 32px; /* Coins arrondis */
+            border-radius: 32px;
             box-shadow: 0 25px 50px -12px var(--shadow);
             position: relative;
         }
 
-        /* Style pour les fenêtres pop-up (Modales) */
+        /* POP-UPS (Modales) : Les fenêtres qui s'ouvrent par dessus */
         .custom-modal {
             display: none; /* Caché par défaut */
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%); /* Astuce pour centrer parfaitement */
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%); /* Centrage parfait */
             background: var(--input-bg);
             border: 1px solid var(--primary);
             padding: 20px;
             border-radius: 20px;
-            z-index: 100; /* Z-index : met l'élément au-dessus des autres (comme des couches) */
+            z-index: 100; /* Z-index = Étage. 100 = Très haut au dessus du reste */
             width: 85%;
             text-align: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
 
+        /* L'en-tête (Titre + Bouton Lune) */
         .global-header {
             display: flex;
-            justify-content: space-between; /* Pousse les éléments aux extrémités */
+            justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
         }
 
+        /* Bouton pour changer de thème */
         .theme-toggle {
             background: var(--input-bg);
             border: 1px solid var(--border);
             color: var(--text-main);
             padding: 8px;
             border-radius: 50%; /* Rond parfait */
-            cursor: pointer; /* Affiche la main au survol */
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            cursor: pointer;
+            width: 36px; height: 36px;
+            display: flex; align-items: center; justify-content: center;
         }
 
         .pro-badge {
-            background: linear-gradient(90deg, #f59e0b, #fbbf24); /* Dégradé doré */
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
             color: #000;
             font-size: 11px;
             padding: 4px 10px;
@@ -125,6 +123,7 @@
             font-weight: 800;
         }
 
+        /* Carte bleue/violette avec le solde */
         .balance-card {
             background: linear-gradient(135deg, var(--primary), #818cf8);
             padding: 20px;
@@ -135,10 +134,10 @@
             position: relative; 
         }
 
+        /* Petit crayon pour modifier le solde */
         .edit-init-btn {
-            position: absolute; /* Position libre à l'intérieur du parent */
-            top: 15px;
-            right: 15px;
+            position: absolute;
+            top: 15px; right: 15px;
             background: rgba(255, 255, 255, 0.2);
             border: none;
             color: white;
@@ -148,15 +147,14 @@
             font-size: 12px;
             transition: 0.2s;
         }
-
         .edit-init-btn:hover { background: rgba(255, 255, 255, 0.4); }
 
-        /* Barre de filtres (Tout, Semaine, Mois...) */
+        /* Barre des filtres (Tout, Mois...) */
         .filter-bar {
             display: flex;
             gap: 5px;
             margin-bottom: 15px;
-            overflow-x: auto; /* Permet de scroller horizontalement si ça dépasse */
+            overflow-x: auto; /* Permet de faire défiler sur le côté */
             padding-bottom: 5px;
         }
 
@@ -168,12 +166,12 @@
             border-radius: 20px;
             font-size: 11px;
             cursor: pointer;
-            white-space: nowrap; /* Empêche le texte de passer à la ligne */
+            white-space: nowrap;
             transition: all 0.2s;
         }
-
         .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
+        /* Zone du graphique */
         .chart-section {
             background: rgba(255,255,255,0.03);
             border: 1px solid var(--border);
@@ -181,31 +179,24 @@
             border-radius: 20px;
             margin-bottom: 20px;
         }
-
         .chart-title { font-size: 10px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; margin-bottom: 10px; display: block; }
-
         .chart-bars {
-            display: flex;
-            align-items: flex-end; /* Aligne les barres par le bas */
-            gap: 12px;
-            height: 80px;
-            overflow-x: auto;
+            display: flex; align-items: flex-end; gap: 12px; height: 80px; overflow-x: auto;
         }
-
         .bar-container { display: flex; flex-direction: column; align-items: center; min-width: 50px; }
         .bar { width: 25px; border-radius: 6px 6px 2px 2px; transition: height 0.4s; min-height: 4px; }
         .bar-label { font-size: 8px; color: var(--text-dim); margin-top: 5px; }
 
+        /* Groupes de champs (Inputs) */
         .input-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
 
-        /* Style commun pour tous les champs de texte et listes déroulantes */
         input, select {
             background: var(--input-bg);
             border: 1px solid var(--border);
             padding: 12px;
             border-radius: 12px;
             color: var(--text-main);
-            outline: none; /* Enlève le contour bleu par défaut du navigateur */
+            outline: none;
             font-size: 14px;
         }
 
@@ -219,27 +210,24 @@
             cursor: pointer;
         }
 
+        /* Liste des transactions (Historique) */
         .tx-list { list-style: none; padding: 0; max-height: 250px; overflow-y: auto; margin-top: 10px; }
         .tx-item { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            padding: 12px 0; 
-            border-bottom: 1px solid var(--border); 
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 0; border-bottom: 1px solid var(--border); 
         }
-
         .tx-actions { display: flex; gap: 10px; margin-left: 10px; }
         .btn-action { background: none; border: none; cursor: pointer; font-size: 14px; padding: 5px; border-radius: 5px; transition: 0.2s; }
         .btn-edit { color: var(--primary); }
         .btn-delete { color: var(--expense); }
 
+        /* Grille de boutons en bas (Excel, Reset...) */
         .utility-grid {
-            display: grid; /* Grille pour aligner les boutons utilitaires */
-            grid-template-columns: 1fr 1fr; /* 2 colonnes de même taille */
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
             margin-top: 20px;
         }
-
         .btn-utility {
             background: var(--input-bg);
             border: 1px solid var(--border);
@@ -248,12 +236,10 @@
             border-radius: 10px;
             font-size: 11px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
+            display: flex; align-items: center; justify-content: center; gap: 5px;
         }
 
+        /* Zone d'ajout de nouvelle catégorie (cachée par défaut) */
         #cat-entry-zone {
             display: none;
             background: rgba(99, 102, 241, 0.1);
@@ -263,38 +249,35 @@
             border: 1px solid var(--primary);
         }
 
-        /* Classes utilitaires (outils rapides) */
         .hidden { display: none !important; }
-        
-        /* Personnalisation de la barre de défilement (Scrollbar) */
         ::-webkit-scrollbar { height: 4px; width: 4px; }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 
-        /* --- CORRECTION VISIBILITÉ BOUTON PLUS (+) SUR MOBILE --- */
+        /* --- LE fameux BOUTON + --- */
         .btn-plus-cat {
             background: var(--input-bg); 
             border: 1px solid var(--border); 
             color: var(--text-main); 
-            border-radius: 12px; /* Coins un peu plus arrondis */
+            border-radius: 12px; 
             cursor: pointer;
             
-            /* -- MODIFICATIONS -- */
-            min-width: 50px; /* Largeur MINIMALE forcée (évite l'écrasement) */
-            height: 45px;    /* Hauteur fixe pour être facile à cliquer */
-            display: flex;   /* Pour bien centrer le + */
+            /* Taille fixe pour qu'il ne s'écrase pas sur mobile */
+            min-width: 50px; 
+            height: 45px;    
+            display: flex;   
             align-items: center;
             justify-content: center;
-            font-size: 24px; /* Le "+" est plus gros */
+            font-size: 24px; 
             font-weight: bold;
-            flex-shrink: 0;  /* CRUCIAL : Interdit au bouton de rétrécir si l'écran est petit */
-            margin-left: 5px; /* Petit espace avec le champ d'à côté */
+            flex-shrink: 0;  /* Empêche le rétrécissement */
+            margin-left: 5px;
         }
     </style>
 </head>
 <body>
 
     <div class="app-card">
-        <!-- Boîte de dialogue : Confirmation de suppression totale -->
+        <!-- MODALE: Confirmation de suppression -->
         <div id="custom-confirm" class="custom-modal">
             <p style="font-size: 14px; margin-bottom: 15px;">Voulez-vous vraiment effacer toutes les données ?</p>
             <div style="display: flex; gap: 10px;">
@@ -303,7 +286,7 @@
             </div>
         </div>
 
-        <!-- Boîte de dialogue : Modifier le solde initial -->
+        <!-- MODALE: Changer le solde de départ -->
         <div id="modal-edit-init" class="custom-modal">
             <p style="font-size: 14px; margin-bottom: 15px; font-weight: 600;">Nouveau solde de départ</p>
             <input type="number" id="input-new-init" style="width: 80%; margin-bottom: 15px;" placeholder="Ex: 1500">
@@ -313,7 +296,7 @@
             </div>
         </div>
 
-        <!-- En-tête de l'application -->
+        <!-- EN-TÊTE -->
         <header class="global-header">
             <div style="display: flex; align-items: center; gap: 10px;">
                 <button class="theme-toggle" onclick="toggleTheme()">
@@ -324,7 +307,7 @@
             <span class="pro-badge">Pro</span>
         </header>
 
-        <!-- ÉCRAN 1: INITIALISATION (Si c'est la première fois) -->
+        <!-- ÉCRAN DE BIENVENUE (Si premier lancement) -->
         <div id="setup-screen" class="hidden">
             <h2 style="text-align: center; font-size: 20px; margin-bottom: 20px;">Bienvenue</h2>
             <p style="text-align: center; font-size: 12px; color: var(--text-dim); margin-bottom: 20px;">Veuillez indiquer votre solde actuel pour commencer.</p>
@@ -334,9 +317,9 @@
             </div>
         </div>
 
-        <!-- ÉCRAN 2: APPLICATION PRINCIPALE -->
+        <!-- APPLICATION PRINCIPALE -->
         <div id="main-app" class="hidden">
-            <!-- Carte du solde (Le gros chiffre) -->
+            <!-- Solde -->
             <div class="balance-card">
                 <button class="edit-init-btn" onclick="openInitModal()" title="Modifier le solde de départ">
                     <i class="fas fa-pencil-alt"></i>
@@ -346,7 +329,7 @@
                 <div id="init-info" style="font-size: 9px; opacity: 0.8; margin-top: -5px;"></div>
             </div>
 
-            <!-- Barre de filtres (Tout, Semaine...) -->
+            <!-- Filtres -->
             <div class="filter-bar">
                 <button class="filter-btn active" onclick="setFilter('all', this)">Tout</button>
                 <button class="filter-btn" onclick="setFilter('week', this)">Semaine</button>
@@ -354,13 +337,13 @@
                 <button class="filter-btn" onclick="setFilter('year', this)">Année</button>
             </div>
 
-            <!-- Graphique simplifié (Barres) -->
+            <!-- Graphique -->
             <div class="chart-section">
                 <span class="chart-title" id="chart-type-label">Analyse des flux</span>
                 <div class="chart-bars" id="chart-container"></div>
             </div>
 
-            <!-- Zone cachée pour ajouter une nouvelle catégorie -->
+            <!-- ZONE AJOUT CATÉGORIE (Cachée au début) -->
             <div id="cat-entry-zone">
                 <span style="font-size: 10px; color: var(--primary); font-weight: 700;">NOUVELLE CATÉGORIE</span>
                 <div style="display: flex; gap: 8px; margin-top: 5px;">
@@ -369,7 +352,7 @@
                 </div>
             </div>
 
-            <!-- Formulaire d'ajout de transaction -->
+            <!-- Formulaire ajout transaction -->
             <div class="input-group">
                 <input type="hidden" id="edit-id" value="">
                 
@@ -381,11 +364,10 @@
                     <input type="date" id="tx-date" style="flex: 1;">
                 </div>
                 
-                <!-- LIGNE AVEC LE BOUTON + CORRIGÉ -->
                 <div style="display: flex; gap: 8px; align-items: center;">
                     <input type="number" id="tx-amount" placeholder="Montant" style="flex: 1;">
                     <select id="tx-cat" style="flex: 1;"></select>
-                    <!-- Le bouton "+" est ici -->
+                    <!-- BOUTON + (Identifié par une classe 'btn-plus-cat' pour le CSS et le JS) -->
                     <button onclick="toggleCatZone()" class="btn-plus-cat" title="Ajouter une catégorie">+</button>
                 </div>
 
@@ -397,7 +379,6 @@
             <span style="font-size: 11px; color: var(--text-dim); font-weight: 600;">HISTORIQUE</span>
             <ul class="tx-list" id="tx-list"></ul>
 
-            <!-- Boutons du bas (Excel, Backup...) -->
             <div class="utility-grid">
                 <button class="btn-utility" onclick="exportToExcel()"><i class="fas fa-file-excel"></i> Excel</button>
                 <button class="btn-utility" onclick="saveBackup()"><i class="fas fa-save"></i> Backup</button>
@@ -407,106 +388,85 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT : Le cerveau de la page (Logique) -->
+    <!-- JAVASCRIPT : Le moteur de l'application -->
     <script>
-        // --- AJOUT PWA : ENREGISTREMENT DU SERVICE WORKER (SW) ---
-        // Le concierge qui permet à l'app de marcher hors-ligne
+        // --- 1. LE CONCIERGE (Service Worker) ---
+        // Il gère le mode hors-ligne.
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js')
-                    .then(registration => {
-                        console.log('Service Worker enregistré avec succès:', registration.scope);
-                    })
-                    .catch(error => {
-                        console.log('Échec de l\'enregistrement du Service Worker:', error);
-                    });
+                    .then(registration => { console.log('Service Worker OK'); })
+                    .catch(error => { console.log('Erreur Service Worker', error); });
             });
         }
-        // ---------------------------------------------------------
 
-        // --- VARIABLES GLOBALES (Les boîtes où on range les données) ---
-        // Clés pour retrouver les données dans la mémoire du navigateur (localStorage)
+        // --- 2. LA MÉMOIRE (Variables) ---
+        // On récupère les données stockées dans le téléphone
         const STORAGE_KEY_TX = 'zb_pro_v8_tx';
         const STORAGE_KEY_INIT = 'zb_pro_v8_init';
         const STORAGE_KEY_THEME = 'zb_pro_v8_theme';
-
-        // Chargement des transactions existantes ou liste vide []
-        let transactions = JSON.parse(localStorage.getItem(STORAGE_KEY_TX)) || [];
-        // Chargement du solde initial
-        let initialBalance = localStorage.getItem(STORAGE_KEY_INIT);
-        
-        // Convertir en nombre si ce n'est pas vide (sinon c'est du texte)
-        if (initialBalance !== null) initialBalance = parseFloat(initialBalance);
-
-        // Clés pour les catégories
         const STORAGE_KEY_CATS_EXP = 'zb_pro_v8_cats_exp';
         const STORAGE_KEY_CATS_INC = 'zb_pro_v8_cats_inc';
-        // Chargement des catégories ou utilisation des valeurs par défaut
+
+        let transactions = JSON.parse(localStorage.getItem(STORAGE_KEY_TX)) || [];
+        let initialBalance = localStorage.getItem(STORAGE_KEY_INIT);
+        if (initialBalance !== null) initialBalance = parseFloat(initialBalance);
+
+        // Catégories par défaut
         let catsExp = JSON.parse(localStorage.getItem(STORAGE_KEY_CATS_EXP)) || ["Alimentation", "Transport", "Loisirs", "Logement", "Santé"];
         let catsInc = JSON.parse(localStorage.getItem(STORAGE_KEY_CATS_INC)) || ["Salaire", "Vente", "Cadeau"];
 
-        let currentFilter = 'all'; // Filtre actuel (Tout voir par défaut)
+        let currentFilter = 'all';
 
-        // --- FONCTIONS D'AFFICHAGE ---
-
-        // Applique le thème (clair ou sombre) au chargement
+        // --- 3. GESTION DES COULEURS (Thème) ---
         function applyTheme() {
             const theme = localStorage.getItem(STORAGE_KEY_THEME);
             const icon = document.getElementById('theme-icon');
             if (theme === 'light') {
                 document.body.classList.add('light-mode');
-                icon.className = 'fas fa-sun'; // Icône soleil
+                icon.className = 'fas fa-sun';
             } else {
                 document.body.classList.remove('light-mode');
-                icon.className = 'fas fa-moon'; // Icône lune
+                icon.className = 'fas fa-moon';
             }
         }
 
-        // Bascule entre les modes quand on clique sur le bouton
         function toggleTheme() {
             const isLight = document.body.classList.toggle('light-mode');
-            localStorage.setItem(STORAGE_KEY_THEME, isLight ? 'light' : 'dark'); // Sauvegarde le choix
+            localStorage.setItem(STORAGE_KEY_THEME, isLight ? 'light' : 'dark');
             applyTheme();
         }
 
-        // --- LA LOGIQUE DE DÉMARRAGE ---
+        // --- 4. DÉMARRAGE DE L'APP ---
         function checkInit() {
             applyTheme();
-            // Met la date d'aujourd'hui dans le champ date
             document.getElementById('tx-date').valueAsDate = new Date();
             
-            // Si le solde initial n'est pas trouvé en mémoire (première utilisation)
             if (initialBalance === null || isNaN(initialBalance)) {
-                // Affiche l'écran de bienvenue
+                // Si pas de solde, on montre l'écran de bienvenue
                 document.getElementById('setup-screen').classList.remove('hidden');
                 document.getElementById('main-app').classList.add('hidden');
             } else {
-                // Sinon, affiche l'application principale
+                // Sinon on montre l'app
                 document.getElementById('setup-screen').classList.add('hidden');
                 document.getElementById('main-app').classList.remove('hidden');
-                handleTypeChange(); // Met à jour les catégories
-                updateUI(); // Met à jour l'affichage
+                handleTypeChange();
+                updateUI();
             }
         }
 
-        // Sauvegarde le premier solde entré par l'utilisateur
         function saveInitialBalance() {
             const val = parseFloat(document.getElementById('initial-balance-input').value);
             if (!isNaN(val)) {
                 initialBalance = val;
-                localStorage.setItem(STORAGE_KEY_INIT, initialBalance); // Écrit dans la mémoire
-                checkInit(); // Recharge pour passer à l'écran suivant
+                localStorage.setItem(STORAGE_KEY_INIT, initialBalance);
+                checkInit();
             }
         }
 
-        // --- GESTION DES MODALES (Les petites fenêtres) ---
-        function openModal(id) {
-            document.getElementById(id).style.display = 'block';
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
-        }
+        // --- 5. FENÊTRES POP-UP ---
+        function openModal(id) { document.getElementById(id).style.display = 'block'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
         function openInitModal() {
             document.getElementById('input-new-init').value = initialBalance;
@@ -523,33 +483,25 @@
             }
         }
 
-        // Efface tout (Reset usine)
         function executeHardReset() {
-            localStorage.clear(); // Vide la mémoire locale
-            window.location.reload(); // Recharge la page
+            localStorage.clear();
+            window.location.reload();
         }
 
-        // --- LOGIQUE MÉTIER (Calculs et tris) ---
+        // --- 6. FILTRES DE TEMPS ---
         function setFilter(filter, btn) {
             currentFilter = filter;
-            // Retire la classe 'active' de tous les boutons
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            // Ajoute la classe 'active' au bouton cliqué
             btn.classList.add('active');
             updateUI();
         }
 
-        // Vérifie si une date correspond au filtre actuel
         function isDateInFilter(txDateStr) {
             if (currentFilter === 'all') return true;
-            // Transforme "25/12/2023" en objet Date
             const parts = txDateStr.split('/');
             const txDate = new Date(parts[2], parts[1] - 1, parts[0]);
             const now = new Date();
-            
-            // Calcul de la différence
-            const diffTime = Math.abs(now - txDate);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const diffDays = Math.ceil(Math.abs(now - txDate) / (1000 * 60 * 60 * 24));
             
             if (currentFilter === 'week') return diffDays <= 7;
             if (currentFilter === 'month') return txDate.getMonth() === now.getMonth() && txDate.getFullYear() === now.getFullYear();
@@ -557,56 +509,50 @@
             return true;
         }
 
-        // Ajoute ou modifie une transaction
+        // --- 7. GESTION DES TRANSACTIONS ---
         function processTransaction() {
-            const id = document.getElementById('edit-id').value; // Si ID existe, c'est une modif
+            const id = document.getElementById('edit-id').value;
             const type = document.getElementById('tx-type').value;
             const amt = parseFloat(document.getElementById('tx-amount').value);
             const cat = document.getElementById('tx-cat').value;
-            const desc = document.getElementById('tx-desc').value.trim() || cat; // Description ou nom de catégorie par défaut
+            const desc = document.getElementById('tx-desc').value.trim() || cat;
             const dateVal = document.getElementById('tx-date').value;
 
-            if (isNaN(amt) || !dateVal) return; // Sécurité si champs vides
+            if (isNaN(amt) || !dateVal) return;
 
             const d = new Date(dateVal);
-            const dateFormatted = d.toLocaleDateString('fr-FR'); // Format français
+            const dateFormatted = d.toLocaleDateString('fr-FR');
 
             if (id) {
-                // Mode Modification : on trouve l'ancienne et on remplace
+                // Modification d'une transaction existante
                 const index = transactions.findIndex(t => t.id == id);
                 transactions[index] = { ...transactions[index], type, amount: amt, category: cat, description: desc, date: dateFormatted };
             } else {
-                // Mode Création : on ajoute au début du tableau (unshift)
+                // Nouvelle transaction
                 transactions.unshift({
-                    id: Date.now(), // Utilise l'heure exacte comme ID unique
-                    type, amount: amt, category: cat, description: desc,
-                    date: dateFormatted
+                    id: Date.now(),
+                    type, amount: amt, category: cat, description: desc, date: dateFormatted
                 });
             }
-            resetForm(); // Vide le formulaire
-            updateUI(); // Met à jour l'écran
+            resetForm();
+            updateUI();
         }
 
         function deleteTransaction(id) {
-            // Garde toutes les transactions SAUF celle qu'on veut supprimer
             transactions = transactions.filter(t => t.id !== id);
             updateUI();
         }
 
-        // Remplit le formulaire avec les infos de la transaction à modifier
         function editTransaction(id) {
             const t = transactions.find(tx => tx.id === id);
             document.getElementById('edit-id').value = t.id;
             document.getElementById('tx-type').value = t.type;
-            handleTypeChange(); // Met à jour la liste des catégories
+            handleTypeChange();
             document.getElementById('tx-cat').value = t.category;
             document.getElementById('tx-amount').value = t.amount;
             document.getElementById('tx-desc').value = t.description;
-            
-            // Conversion de date pour l'input date (format yyyy-mm-dd)
             const parts = t.date.split('/');
             document.getElementById('tx-date').value = `${parts[2]}-${parts[1]}-${parts[0]}`;
-            
             document.getElementById('submit-btn').innerText = "Mettre à jour";
             document.getElementById('cancel-edit').classList.remove('hidden');
         }
@@ -620,30 +566,23 @@
             document.getElementById('cancel-edit').classList.add('hidden');
         }
 
-        // Change la liste des catégories selon si c'est Dépense ou Revenu
         function handleTypeChange() {
             const type = document.getElementById('tx-type').value;
             const list = (type === 'expense') ? catsExp : catsInc;
-            // Génère le HTML des options <option>
             document.getElementById('tx-cat').innerHTML = list.map(c => `<option value="${c}">${c}</option>`).join('');
             updateChart();
         }
 
-        // La fonction principale qui redessine tout l'écran
+        // --- 8. MISE À JOUR DE L'ÉCRAN ---
         function updateUI() {
-            // Filtre les transactions selon la date choisie
             const filteredTx = transactions.filter(t => isDateInFilter(t.date));
-            
-            // Calcule les totaux
             const globalInc = transactions.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
             const globalExp = transactions.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
             const total = (initialBalance || 0) + globalInc - globalExp;
             
-            // Affiche le solde
             document.getElementById('total-val').innerText = total.toLocaleString('fr-FR', { minimumFractionDigits: 2 }) + " €";
             document.getElementById('init-info').innerText = `(Initial : ${initialBalance.toFixed(2)}€)`;
 
-            // Génère la liste HTML des transactions
             document.getElementById('tx-list').innerHTML = filteredTx.map(t => `
                 <li class="tx-item">
                     <div style="flex:1">
@@ -661,28 +600,21 @@
             `).join('');
 
             updateChart(filteredTx);
-            // Sauvegarde tout dans le navigateur
             localStorage.setItem(STORAGE_KEY_TX, JSON.stringify(transactions));
         }
 
-        // Dessine les barres du graphique
         function updateChart(data = transactions) {
             const type = document.getElementById('tx-type').value;
             const filtered = data.filter(t => t.type === type);
             const container = document.getElementById('chart-container');
-            
             if (filtered.length === 0) {
                 container.innerHTML = `<p style="font-size:10px; color:var(--text-dim); margin:auto;">Pas de données</p>`;
                 return;
             }
-            
-            // Trouve les catégories uniques utilisées
             const activeCats = [...new Set(filtered.map(t => t.category))];
-            // Calcule le total pour chaque catégorie
             const totals = activeCats.map(c => filtered.filter(t => t.category === c).reduce((s, t) => s + t.amount, 0));
-            const maxVal = Math.max(...totals); // Pour savoir quelle barre est la plus haute (100%)
+            const maxVal = Math.max(...totals);
 
-            // Génère les barres HTML
             container.innerHTML = activeCats.map((c, i) => {
                 const h = (totals[i] / maxVal) * 100;
                 return `
@@ -694,7 +626,7 @@
             }).join('');
         }
 
-        // Génère un fichier .json à télécharger
+        // --- 9. IMPORT / EXPORT ---
         function saveBackup() {
             const data = { transactions, initialBalance, date: new Date().toISOString() };
             const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
@@ -705,7 +637,6 @@
             a.click();
         }
 
-        // Lit un fichier .json uploadé par l'utilisateur
         function importBackup() {
             const input = document.createElement('input');
             input.type = 'file';
@@ -725,7 +656,6 @@
             input.click();
         }
 
-        // Génère un fichier CSV (compatible Excel)
         function exportToExcel() {
             let csv = "Date;Description;Categorie;Type;Montant\n";
             transactions.forEach(t => csv += `${t.date};${t.description};${t.category};${t.type};${t.amount}\n`);
@@ -737,13 +667,17 @@
             a.click();
         }
 
-        // Affiche/Cache la zone d'ajout de catégorie
+        // --- 10. GESTION DES CATÉGORIES (Le bouton +) ---
+
+        // Affiche/Cache la zone (Fonction déclenchée par le clic sur +)
         function toggleCatZone() {
             const z = document.getElementById('cat-entry-zone');
+            // Si c'est affiché (block), on cache (none). Sinon on affiche.
             z.style.display = (z.style.display === 'block') ? 'none' : 'block';
+            if(z.style.display === 'block') document.getElementById('new-cat-name').focus();
         }
 
-        // Confirme l'ajout d'une nouvelle catégorie
+        // Ajoute la catégorie
         function confirmNewCategory() {
             const name = document.getElementById('new-cat-name').value.trim();
             if(!name) return;
@@ -761,7 +695,23 @@
             document.getElementById('new-cat-name').value = "";
         }
 
-        // Démarre l'application quand la page est chargée
+        // --- NOUVEAU : ESPION DE CLIC (Fermeture automatique) ---
+        // On écoute n'importe quel clic sur la page entière (document)
+        document.addEventListener('click', function(event) {
+            const zone = document.getElementById('cat-entry-zone');
+            const btn = document.querySelector('.btn-plus-cat');
+
+            // Si la zone est visible...
+            if (zone.style.display === 'block') {
+                // ...et que ce qu'on vient de cliquer (event.target) n'est NI le bouton +, NI la zone elle-même
+                if (!btn.contains(event.target) && !zone.contains(event.target)) {
+                    // Alors on ferme la zone !
+                    zone.style.display = 'none';
+                }
+            }
+        });
+
+        // Au chargement, on lance l'app
         window.onload = checkInit;
     </script>
 </body>
